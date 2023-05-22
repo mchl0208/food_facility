@@ -14,9 +14,12 @@ defmodule FoodFacilityWeb.FoodTruckJSON do
   end
 
   defp data(%{} = foodtruck) do
-    # %{
-    #   id: foodtruck.id
-    # }
-    foodtruck
+    %{
+      id: Map.get(foodtruck, "objectid"),
+      facilitytype: Map.get(foodtruck, "facilitytype"),
+      fooditems: Map.get(foodtruck, "fooditems"),
+      status: Map.get(foodtruck, "status"),
+      address: Map.get(foodtruck, "address")
+    }
   end
 end

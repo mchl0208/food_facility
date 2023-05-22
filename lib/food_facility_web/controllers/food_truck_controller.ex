@@ -5,22 +5,21 @@ defmodule FoodFacilityWeb.FoodTruckController do
 
   @socrata_provider Application.compile_env(:food_facility, :socrata_provider)
 
-  def index(conn, _params) do
-    with {:ok, foodtrucks} <- @socrata_provider.search() do
+  @doc """
+  Searches and lists all food trucks matching the given search param.
+
+  if no param is provided all data is returned.
+
+  Allowed params:
+    - from_location: it can be your current lat/long or the place from where you want to get to the establishment.
+  """
+  def index(conn, params) do
+    params = Map.to_list(params)
+
+    with {:ok, foodtrucks} <- @socrata_provider.search(params) do
       conn
       |> put_status(:ok)
       |> render(:index, foodtrucks: foodtrucks)
     end
-  end
-
-  @doc """
-  Searches and lists all food trucks matching the given search param (`term`).
-  """
-  def search(conn, params) do
-    res = params
-
-    conn
-    |> put_status(:ok)
-    |> render(:index, foodtrucks: res)
   end
 end

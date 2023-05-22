@@ -1,4 +1,6 @@
 defmodule FoodFacility.Service.Socrata do
+  use HTTPoison.Base
+
   defp get_config(key, default \\ nil),
     do: Application.get_env(:food_facility, __MODULE__, []) |> Keyword.get(key, default)
 
@@ -32,7 +34,8 @@ defmodule FoodFacility.Service.Socrata do
     {:error, status_code, error}
   end
 
-  defp send_request(:get, url, _payload, opts) do
+  defp send_request(:get, url, payload, opts) do
+    url = URI.encode(url <> "?#{payload}")
     HTTPoison.get(url, build_headers(opts), recv_timout: 15_000)
   end
 
@@ -52,7 +55,17 @@ defmodule FoodFacility.Service.Socrata do
     ]
   end
 
-  def search(params \\ nil) do
+  defp build_search_params({"from_location", from_location}) do
+    "$where=within_circle(location, #{from_location})"
+  end
+
+  defp build_search_params({_, _}), do: ""
+
+  def search(params \\ []) do
+    params =
+      Enum.map(params, &build_search_params(&1))
+      |> Enum.join("&")
+
     request(:get, "rqzj-sfat.json", params, [])
   end
 end
