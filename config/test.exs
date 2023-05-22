@@ -7,10 +7,8 @@ config :food_facility, FoodFacilityWeb.Endpoint,
   secret_key_base: "JzlsJGJVxyzJ+gCnZsV5V99vSjHmNgQMVbKsXofyTeGHVu0fBj6DfNBagHFtoXiH",
   server: false
 
-# config :food_facility, FoodFacility.Service.Socrata,
-#   api_caller: &FoodFacility.Test.FakeSocrata.call_api/4
-# config :food_facility,
-#   socrata_provider: FoodFacility.Test.FakeSocrata
+config :food_facility, FoodFacility.Service.Socrata,
+  api_caller: &FoodFacility.Test.FakeSocrata.call_api/4
 
 # In test we don't send emails.
 config :food_facility, FoodFacility.Mailer,
