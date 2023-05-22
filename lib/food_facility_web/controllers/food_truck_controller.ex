@@ -3,20 +3,10 @@ defmodule FoodFacilityWeb.FoodTruckController do
 
   action_fallback FoodFacilityWeb.FallbackController
 
+  @socrata_provider Application.compile_env(:food_facility, :socrata_provider)
+
   def index(conn, _params) do
-    qry_result =
-      query("rqzj-sfat", domain: "data.sfgov.org")
-      |> select([:objectid, :applicant])
-      # |> where("")
-      # |> order("")
-      |> offset(5)
-      |> run
-
-    with {:ok, row_stream} <- qry_result do
-      foodtrucks =
-        Enum.take(row_stream, 10)
-        |> Enum.map(&(&1))
-
+    with {:ok, foodtrucks} <- @socrata_provider.search() do
       conn
       |> put_status(:ok)
       |> render(:index, foodtrucks: foodtrucks)

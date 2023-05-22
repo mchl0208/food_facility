@@ -17,6 +17,13 @@ config :food_facility, FoodFacilityWeb.Endpoint,
   pubsub_server: FoodFacility.PubSub,
   live_view: [signing_salt: "SexY/NUS"]
 
+config :food_facility,
+  socrata_provider: FoodFacility.Service.Socrata
+
+config :food_facility, FoodFacility.Service.Socrata,
+  base_url:
+    System.get_env("SOCRATA_BASE_URL", "https://data.sfgov.org/resource/")
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
